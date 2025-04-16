@@ -10,8 +10,8 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] Image playerLifebar;
     [SerializeField] LayerMask enemyMask;
     [SerializeField] LayerMask obstacleMask;
-
-    private Rigidbody rb;
+    
+    public Rigidbody rb;
 
     private void Awake()
     {

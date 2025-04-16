@@ -1,18 +1,15 @@
-using System.Collections;
-using System.Collections.Generic;
+
 using UnityEngine;
 
 public class Enemyspawner : MonoBehaviour
 {
-    [SerializeField] private LayerMask bulletMask;
-    [SerializeField] private LayerMask playerMask;
+   
     [SerializeField] private GameObject enemy;
-    [SerializeField] private Transform bulletTransform;
     [SerializeField] private bool canSpawn;
     [SerializeField] private float timer;
     [SerializeField] private float timeBetweenSpawns;
-    [SerializeField] private Vector3 spawnlocation = new(1,1,1);
-    float speed = 1f;
+     static Vector3 spawnlocation; 
+
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +20,7 @@ public class Enemyspawner : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        SetSpawnLocation();
         Spawn();
        
     }
@@ -45,6 +43,17 @@ public class Enemyspawner : MonoBehaviour
         }
         
     }
+
+    static void SetSpawnLocation()
+    {
+
+        var randomLocation = new Vector3(Random.Range(1f, 100f), 1, Random.Range(1f, 100f));
+
+        spawnlocation = randomLocation;
+
+    }
+    
+
 
    
 }

@@ -7,12 +7,12 @@ public class PlayerShoot : MonoBehaviour
 {
     [SerializeField] private Camera cam;
     [SerializeField] private LayerMask destroyableLayer;
-    [SerializeField] private GameObject bullet;
+    [SerializeField] private Bullet bulletPrefab;
     [SerializeField] private Transform bulletTransform;
     [SerializeField] private bool canFire;
     [SerializeField] private float timer;
     [SerializeField] private float timeBetweenShots;
-    
+
 
 
     private void Awake()
@@ -22,72 +22,81 @@ public class PlayerShoot : MonoBehaviour
     }
     void Update()
     {
-        
-        CameraRay();
-        Aim();
-        Shoot();    
+
+
+        Shoot();
     }
-    void CameraRay()
-    {
-        if (Input.GetMouseButtonDown(0))
-        {
-            var ray = cam.ScreenPointToRay(Input.mousePosition);
+    //void CameraRay()
+    //{
+    //    if (Input.GetMouseButtonDown(0))
+    //    {
+    //        var ray = cam.ScreenPointToRay(Input.mousePosition);
 
-            if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, destroyableLayer))
-            {
-                Debug.Log(hit.transform.gameObject);
-                hit.transform.gameObject.SetActive(false);
-            }
-        }
+    //        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, destroyableLayer))
+    //        {
+    //            Debug.Log(hit.transform.gameObject);
+    //            hit.transform.gameObject.SetActive(false);
+    //        }
+    //    }
 
-    }
-    private void Aim()
-    {
-        var (success, position) = GetMousePosition();
-        if (success)
-        {
-            // Calculate the direction
-            var direction = position - transform.position;
+    //}
+    //private void Aim()
+    //{
+    //    var (success, position) = GetMousePosition();
+    //    if (success)
+    //    {
+    //        // Calculate the direction
+    //        var direction = position - transform.position;
 
-            // Make the transform look in the direction.
-            transform.forward = direction;
-        }
-    }
+    //        // Make the transform look in the direction.
+    //        transform.forward = direction;
+    //    }
+    //}
 
-    private (bool success, Vector3 position) GetMousePosition()
-    {
-        var ray = cam.ScreenPointToRay(Input.mousePosition);
+    //private (bool success, Vector3 position) GetMousePosition()
+    //{
+    //    var ray = cam.ScreenPointToRay(Input.mousePosition);
 
-        if (Physics.Raycast(ray, out var hitInfo, Mathf.Infinity))
-        {
-            // The Raycast hit something, return with the position.
-            return (success: true, position: hitInfo.point);
-        }
-        else
-        {
-            // The Raycast did not hit anything.
-            return (success: false, position: Vector3.zero);
-        }
-    }
+    //    if (Physics.Raycast(ray, out var hitInfo, Mathf.Infinity))
+    //    {
+    //        // The Raycast hit something, return with the position.
+    //        return (success: true, position: hitInfo.point);
+    //    }
+    //    else
+    //    {
+    //        // The Raycast did not hit anything.
+    //        return (success: false, position: Vector3.zero);
+    //    }
+    //}
 
     private void Shoot()
     {
+
         if (!canFire)
         {
             timer += Time.deltaTime;
             if (timer > timeBetweenShots)
-            { 
+            {
                 canFire = true;
                 timer = 0;
             }
-        
+
         }
         if (Input.GetMouseButtonDown(0) && canFire)
         {
-            canFire = false;
-            Instantiate(bullet, bulletTransform.position, Quaternion.identity);
+            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+
+            if (Physics.Raycast(ray, out RaycastHit hit, 100, destroyableLayer))
+            {
+                Debug.Log(hit.transform.gameObject);
+                Bullet bullet = Instantiate(bulletPrefab);
+                bullet.SetTarget(hit.transform);
+                bullet.transform.position = transform.position;
+                canFire = false;
+            }
         }
+     
     }
-   
+
 
 }

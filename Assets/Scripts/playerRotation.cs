@@ -1,11 +1,14 @@
+using Unity.VisualScripting;
+using UnityEditor.Experimental.GraphView;
 using UnityEngine;
 using UnityEngine.UIElements;
 
 public class playerRotation : MonoBehaviour
 {
 
-    [SerializeField] private float maxSpeed = 100f;
-
+    [SerializeField] private float rotationSpeed = 100f;
+    float mouseX = 0;
+    float mouseY = 0;
     Rigidbody rb;
     private void Awake()
     {
@@ -15,22 +18,21 @@ public class playerRotation : MonoBehaviour
     private void Update()
     {
 
-        float y = Input.GetAxis("Mouse X");
-        float x = Input.GetAxis("Mouse Y");
-        //float z = 0;
-        //Debug.Log("X: " + x + "\nY: " + y);
+        float x = Input.GetAxis("Mouse X") * rotationSpeed;
+        float y = Input.GetAxis("Mouse Y") * rotationSpeed;
 
-        if (Mathf.Abs(x) < 0.01f && Mathf.Abs(y) < 0.01f)
-            return;
+       
+
+        mouseX += x;
+        mouseY -= y;
+
+        mouseY = Mathf.Clamp(mouseY, -70f, 70f);
+        
 
 
-        Vector3 direction = (Vector3.up * y + Vector3.right * x);
-        //direction.z = 0;
-        //rb.AddTorque(direction * maxSpeed, ForceMode.Acceleration);
-        direction.y *= maxSpeed;
-        direction.x *= maxSpeed;
-        direction.z = 0;
-        transform.Rotate(direction);
+
+        transform.rotation = Quaternion.Euler( mouseY, mouseX, 0);
+        
 
 
     }

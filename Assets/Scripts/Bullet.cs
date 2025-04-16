@@ -4,60 +4,53 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    [SerializeField] private Vector3 mousePos;
-    [SerializeField] private Camera cam;
+    [SerializeField] private Transform target;
+
     [SerializeField] private float speed;
     Rigidbody rb;
-    [SerializeField] LayerMask playerMask;
+    [SerializeField] LayerMask enemyMask;
+    private Vector3 direction;
 
-    private void Awake()
-    {
-        if (cam == null)
-            cam = Camera.main;
-    }
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
-        
-        
-        //rb.velocity = new Vector2(direction.x,direction.y).normalized * speed;
+
+
+
     }
 
-    // Update is called once per frame
+
     void Update()
     {
-        mousePos = GetMousePosition();
-        Vector3 direction = (mousePos - transform.position).normalized;
-        rb.AddForce(direction * speed, ForceMode.Acceleration);
-
-    }
-    private Vector3 GetMousePosition()
-    {
-        Vector3 position;
-        var ray = cam.ScreenPointToRay(Input.mousePosition);
-
-        if (Physics.Raycast(ray, out var hitInfo, Mathf.Infinity))
+        if (target)
         {
-            position = hitInfo.point;
-            //position.Normalize();
-            return position;
-
+            direction = (target.position - transform.position).normalized;
+            rb.MovePosition(rb.position + direction * (speed * Time.deltaTime));
         }
         else
         {
-            return Vector3.zero;
+            
+            rb.MovePosition(rb.position + direction * (speed* Time.deltaTime));
+            Debug.Log("no posee target");
         }
 
+
+
+    }
+    public void SetTarget(Transform target)
+    {
+        this.target = target;
     }
 
     public void OnCollisionEnter(Collision collision)
     {
-        if(!CheckLayerInMask(playerMask, collision.gameObject.layer))
+        if (CheckLayerInMask(enemyMask, collision.gameObject.layer))
         {
-
+            Debug.Log("pego contra " + collision.gameObject.layer);
             Destroy(rb.gameObject);
         }
-        
+
     }
     public static bool CheckLayerInMask(LayerMask mask, int layer)
     {
