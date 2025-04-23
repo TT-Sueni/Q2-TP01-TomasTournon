@@ -12,13 +12,14 @@ public class PlayerShoot : MonoBehaviour
     [SerializeField] private bool canFire;
     [SerializeField] private float timer;
     [SerializeField] private float timeBetweenShots;
+    laser laser;
 
-
-
+  
     private void Awake()
     {
         if (cam == null)
             cam = Camera.main;
+        //laser.pointer = GetComponent<LineRenderer>();
     }
     void Update()
     {
@@ -26,48 +27,7 @@ public class PlayerShoot : MonoBehaviour
 
         Shoot();
     }
-    //void CameraRay()
-    //{
-    //    if (Input.GetMouseButtonDown(0))
-    //    {
-    //        var ray = cam.ScreenPointToRay(Input.mousePosition);
-
-    //        if (Physics.Raycast(ray, out RaycastHit hit, Mathf.Infinity, destroyableLayer))
-    //        {
-    //            Debug.Log(hit.transform.gameObject);
-    //            hit.transform.gameObject.SetActive(false);
-    //        }
-    //    }
-
-    //}
-    //private void Aim()
-    //{
-    //    var (success, position) = GetMousePosition();
-    //    if (success)
-    //    {
-    //        // Calculate the direction
-    //        var direction = position - transform.position;
-
-    //        // Make the transform look in the direction.
-    //        transform.forward = direction;
-    //    }
-    //}
-
-    //private (bool success, Vector3 position) GetMousePosition()
-    //{
-    //    var ray = cam.ScreenPointToRay(Input.mousePosition);
-
-    //    if (Physics.Raycast(ray, out var hitInfo, Mathf.Infinity))
-    //    {
-    //        // The Raycast hit something, return with the position.
-    //        return (success: true, position: hitInfo.point);
-    //    }
-    //    else
-    //    {
-    //        // The Raycast did not hit anything.
-    //        return (success: false, position: Vector3.zero);
-    //    }
-    //}
+    
 
     private void Shoot()
     {
@@ -82,19 +42,19 @@ public class PlayerShoot : MonoBehaviour
             }
 
         }
-        if (Input.GetMouseButtonDown(0) && canFire)
-        {
-            Ray ray = cam.ScreenPointToRay(Input.mousePosition);
+        //if (Input.GetMouseButtonDown(0) && canFire)
+        //{
+        //    Ray ray = cam.ScreenPointToRay(Input.mousePosition);
 
-            if (Physics.Raycast(ray, out RaycastHit hit, 100, destroyableLayer))
-            {
-                Debug.Log(hit.transform.gameObject);
-                Bullet bullet = Instantiate(bulletPrefab);
-                bullet.SetTarget(hit.transform);
-                bullet.transform.position = transform.position;
-                canFire = false;
-            }
-        }
+        //    if (Physics.Raycast(ray, out RaycastHit hit, 100,destroyableLayer ))
+        //    {
+        //        //Debug.Log(hit.transform.gameObject);
+        //        Bullet bullet = Instantiate(bulletPrefab);
+        //        bullet.SetTarget(hit.transform);
+        //        bullet.transform.position = transform.position;
+        //        canFire = false;
+        //    }
+        //}
      
     }
 

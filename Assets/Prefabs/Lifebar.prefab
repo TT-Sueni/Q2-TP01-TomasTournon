@@ -28,7 +28,7 @@ RectTransform:
   m_GameObject: {fileID: 4799547863116048969}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0.13899472}
-  m_LocalScale: {x: 0.0029037273, y: 0.0031244566, z: 0.006961992}
+  m_LocalScale: {x: 0.004073349, y: 0.0010179341, z: 0.006961992}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 5880898878986055068}
@@ -36,7 +36,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 0, y: 2.449997}
+  m_AnchoredPosition: {x: 0, y: 2.4500122}
   m_SizeDelta: {x: 814, y: 458}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!223 &8526124552299748282
@@ -84,7 +84,7 @@ MonoBehaviour:
   m_FallbackScreenDPI: 96
   m_DefaultSpriteDPI: 96
   m_DynamicPixelsPerUnit: 1
-  m_PresetInfoIsWorld: 1
+  m_PresetInfoIsWorld: 0
 --- !u!114 &941392009216649432
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -136,8 +136,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 0, y: 0}
-  m_AnchoredPosition: {x: 401, y: 222}
-  m_SizeDelta: {x: 64, y: 64}
+  m_AnchoredPosition: {x: 406.45, y: 222}
+  m_SizeDelta: {x: 64.868, y: 64}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!222 &7204230837331914807
 CanvasRenderer:

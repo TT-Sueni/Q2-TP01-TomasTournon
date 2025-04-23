@@ -4,56 +4,50 @@ using UnityEngine;
 
 public class Bullet : MonoBehaviour
 {
-    [SerializeField] private Transform target;
+    [SerializeField] static Vector3 target;
 
     [SerializeField] private float speed;
     Rigidbody rb;
     [SerializeField] LayerMask enemyMask;
     private Vector3 direction;
+    [SerializeField] GameObject bullet;
+    static public int score = 0;
+    
 
 
     void Start()
     {
         rb = GetComponent<Rigidbody>();
 
-
-
     }
 
 
     void Update()
     {
-        if (target)
-        {
-            direction = (target.position - transform.position).normalized;
-            rb.MovePosition(rb.position + direction * (speed * Time.deltaTime));
-        }
-        else
-        {
-            
-            rb.MovePosition(rb.position + direction * (speed* Time.deltaTime));
-            Debug.Log("no posee target");
-        }
-
-
-
+        
     }
-    public void SetTarget(Transform target)
+    public static  void SetTarget(Vector3 target2)
     {
-        this.target = target;
+        target = target2;
     }
 
-    public void OnCollisionEnter(Collision collision)
+    
+    private void OnCollisionEnter(Collision collision)
     {
         if (CheckLayerInMask(enemyMask, collision.gameObject.layer))
         {
-            Debug.Log("pego contra " + collision.gameObject.layer);
-            Destroy(rb.gameObject);
+            
+            ObjectPool.Instance.ReturnToQueue("Bullet",bullet);
+            bullet.SetActive(false);
+            rb.velocity = Vector3.zero;
+            rb.angularVelocity = Vector3.zero;
+            
         }
 
     }
-    public static bool CheckLayerInMask(LayerMask mask, int layer)
+    public static  bool CheckLayerInMask(LayerMask mask, int layer)
     {
         return mask == (mask | (1 << layer));
     }
+   
 }

@@ -39,7 +39,10 @@ public class Enemyspawner : MonoBehaviour
         if (canSpawn)
         {
             canSpawn = false;
-            Instantiate(enemy, spawnlocation, Quaternion.identity);
+            GameObject currentEnemy = ObjectPool.Instance.SpawnFromPool("Enemy", spawnlocation, Quaternion.identity);
+            GameObject currentCitizen = ObjectPool.Instance.SpawnFromPool("Citizen", -spawnlocation, Quaternion.identity);
+
+
         }
         
     }
@@ -47,7 +50,7 @@ public class Enemyspawner : MonoBehaviour
     static void SetSpawnLocation()
     {
 
-        var randomLocation = new Vector3(Random.Range(1f, 100f), 1, Random.Range(1f, 100f));
+        var randomLocation = new Vector3(Random.Range(1f, 10f), 0, Random.Range(1f, 10f));
 
         spawnlocation = randomLocation;
 

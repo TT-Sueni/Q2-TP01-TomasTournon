@@ -15,6 +15,8 @@ public class PlayerMovement : MonoBehaviour
 
     private void Awake()
     {
+
+        
         rb = GetComponent<Rigidbody>();
     }
     private void Update()
@@ -54,7 +56,7 @@ public class PlayerMovement : MonoBehaviour
         Vector3 direction = (forward * z + right * x + Vector3.up * y ).normalized;
         rb.AddForce(direction * speed, ForceMode.Acceleration);
         if (rb.velocity.magnitude > maxSpeed)
-            rb.velocity = rb.velocity * maxSpeed;
+            rb.velocity = rb.velocity.normalized * maxSpeed;
         
 
     }
