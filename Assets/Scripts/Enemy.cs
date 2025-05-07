@@ -2,53 +2,56 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
-using UnityEngine.SocialPlatforms.Impl;
 
-public class Enemy : MonoBehaviour
+public class Enemy : BaseEnemy 
 {
+    [SerializeField] GameObject enemySpawner;
 
-    [SerializeField] private float speed = 1f;
+    Enemy enemy;
 
-    [SerializeField] GameObject target;
-    [SerializeField] LayerMask bulletmask;
-    [SerializeField] GameObject enemyPrefab;
-    bool alive;
-
-    // Start is called before the first frame update
     void OnEnable()
     {
-        alive = true;
+        isAlive = true;
     }
 
-    // Update is called once per frame
+   
     void Update()
     {
-        if (alive)
+        if (isAlive)
         { 
             transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed * Time.deltaTime);
-            Vector3 floor = new Vector3(0, transform.position.y , 0);
+
+            Vector3 floor = new Vector3(0, transform.position.y, 0);
             transform.position -= floor;
             transform.LookAt(target.transform);
             
         }
     }
-
-    private void OnCollisionEnter(Collision collision)
+    public override void SetParent()
     {
-        if (CheckLayerInMask(bulletmask, collision.gameObject.layer))
+        transform.parent = enemySpawner.transform;
+    }
+   
+    public override void GetObjectFromPool()
+    {
+        //enemy = ObjectPool.Instance.Get<Enemy>(transform.position,Quaternion.identity);
+    }
+
+    public override void ResetToDefault()
+    {
+        
+    }
+    public void OnCollisionEnter(Collision collision)
+    {
+
+
+        if (Bullet.CheckLayerInMask(bulletMask, collision.gameObject.layer))
         {
 
-            ObjectPool.Instance.ReturnToQueue("Enemy", enemyPrefab);
-
-            alive = false;
-
-            enemyPrefab.SetActive(false);
+            ObjectPool.Instance.ReturnToPool<Enemy>(enemy);
             Bullet.score++;
         }
+    }
+  
 
-    }
-    public static bool CheckLayerInMask(LayerMask mask, int layer)
-    {
-        return mask == (mask | (1 << layer));
-    }
 }

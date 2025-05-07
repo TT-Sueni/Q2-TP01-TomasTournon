@@ -3,26 +3,21 @@ using UnityEngine;
 
 public class Enemyspawner : MonoBehaviour
 {
-   
-    [SerializeField] private GameObject enemy;
+
+
     [SerializeField] private bool canSpawn;
     [SerializeField] private float timer;
     [SerializeField] private float timeBetweenSpawns;
-     static Vector3 spawnlocation; 
+    static Vector3 spawnLocationEnemy;
+    static Vector3 spawnLocationCitizen;
 
 
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
 
-    // Update is called once per frame
     void Update()
     {
         SetSpawnLocation();
         Spawn();
-       
+
     }
     private void Spawn()
     {
@@ -39,10 +34,14 @@ public class Enemyspawner : MonoBehaviour
         if (canSpawn)
         {
             canSpawn = false;
-            GameObject currentEnemy = ObjectPool.Instance.SpawnFromPool("Enemy", spawnlocation, Quaternion.identity);
-            GameObject currentCitizen = ObjectPool.Instance.SpawnFromPool("Citizen", -spawnlocation, Quaternion.identity);
+            var currentEnemy = ObjectPool.Instance.Get<Enemy>();
+            
 
-
+            currentEnemy.transform.position = spawnLocationEnemy;
+            currentEnemy.gameObject.SetActive(true);
+            var currentCitizen = ObjectPool.Instance.Get<Citizen>();
+            currentCitizen.transform.position = spawnLocationCitizen;
+            currentCitizen.gameObject.SetActive(true);
         }
         
     }
@@ -50,13 +49,14 @@ public class Enemyspawner : MonoBehaviour
     static void SetSpawnLocation()
     {
 
-        var randomLocation = new Vector3(Random.Range(1f, 10f), 0, Random.Range(1f, 10f));
+        var randomLocationEnemy = new Vector3(30, 0, Random.Range(-20f, 30f));
+        var randomLocationCitizen = new Vector3(-60, 0, Random.Range(-1f, 7f));
 
-        spawnlocation = randomLocation;
-
+        spawnLocationEnemy = randomLocationEnemy;
+        spawnLocationCitizen = randomLocationCitizen;
     }
-    
 
 
-   
+
+
 }

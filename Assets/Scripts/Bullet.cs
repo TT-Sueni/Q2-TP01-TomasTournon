@@ -2,7 +2,7 @@
 using UnityEngine;
 
 
-public class Bullet : MonoBehaviour
+public class Bullet : MonoBehaviour, IPooleable
 {
     [SerializeField] static Vector3 target;
 
@@ -10,44 +10,74 @@ public class Bullet : MonoBehaviour
     Rigidbody rb;
     [SerializeField] LayerMask enemyMask;
     private Vector3 direction;
-    [SerializeField] GameObject bullet;
+
     static public int score = 0;
-    
+    [SerializeField] GameObject magazine;
+    Bullet bullet;
 
 
-    void Start()
+    void Awake()
     {
+
+
         rb = GetComponent<Rigidbody>();
 
     }
 
 
-    void Update()
-    {
-        
-    }
-    public static  void SetTarget(Vector3 target2)
+
+    public static void SetTarget(Vector3 target2)
     {
         target = target2;
     }
 
-    
-    private void OnCollisionEnter(Collision collision)
+
+    public void GetObjectFromPool()
     {
+        //bullet = ObjectPool.Instance.Get<Bullet>();
+    }
+
+
+    void OnCollisionEnter(Collision collision)
+    {
+        IDamageable damageable = collision.transform.GetComponent<IDamageable>();
+        if (damageable != null)
+        {
+            damageable.DestroyObject();
+        }
+
+
+
         if (CheckLayerInMask(enemyMask, collision.gameObject.layer))
         {
-            
-            ObjectPool.Instance.ReturnToQueue("Bullet",bullet);
-            bullet.SetActive(false);
-            rb.velocity = Vector3.zero;
-            rb.angularVelocity = Vector3.zero;
-            
+
+            ObjectPool.Instance.ReturnToPool<Bullet>(bullet);
+
+
+
         }
 
     }
-    public static  bool CheckLayerInMask(LayerMask mask, int layer)
+
+
+
+    public void ResetToDefault()
+    {
+        rb.velocity = Vector3.zero;
+        rb.angularVelocity = Vector3.zero;
+    }
+
+    public void SetParent()
+    {
+        transform.parent = magazine.transform;
+    }
+    public static bool CheckLayerInMask(LayerMask mask, int layer)
     {
         return mask == (mask | (1 << layer));
     }
-   
+
+    public void ReturntoPool()
+    {
+        
+    }
 }

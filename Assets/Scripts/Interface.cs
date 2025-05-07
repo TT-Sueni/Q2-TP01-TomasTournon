@@ -16,7 +16,7 @@ public class Interface : MonoBehaviour
     [SerializeField] private GameObject aim;
     [SerializeField] private Camera cam;
     bool aimON = true;
-    bool FPS = true;
+    
 
     Bullet bullet;
 
@@ -59,7 +59,7 @@ public class Interface : MonoBehaviour
             aim.SetActive(false);
             aimON = false;
         }
-        CameraSwitch();
+        
     }
 
     public void Scoreboard(int score)
@@ -101,17 +101,5 @@ public class Interface : MonoBehaviour
         exitButton.onClick.RemoveAllListeners();
     }
 
-    private void CameraSwitch() // arreglar
-    {
-        if (Input.GetKeyDown(KeyCode.Alpha1) && FPS)
-        {
-            cam.transform.position = new Vector3(0, 0, 0.1f);
-            FPS = false;
-        }
-        else if (Input.GetKeyDown(KeyCode.Alpha1) && !FPS)
-        { 
-            cam.transform.position = new Vector3(0.4f, 1.58f, -5.68f);
-        FPS = true;
-        }
-    }
+   
 }

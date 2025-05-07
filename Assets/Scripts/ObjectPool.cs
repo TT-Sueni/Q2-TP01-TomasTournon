@@ -1,76 +1,143 @@
+
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.Pool;
 
-public class ObjectPool : MonoBehaviour
+
+public class ObjectPool : MonoBehaviourSingleton<ObjectPool>
 {
     [System.Serializable]
     public class Pool
     {
         public string tag;
-        public GameObject prefab;
+        //public GameObject prefab;
         public int sizeofPool;
     }
-    public static ObjectPool Instance;
 
-    private void Awake()
+
+
+
+    //private List<Pool> pools;
+    private Dictionary<Type, IPooleable> prefabs = new Dictionary<Type, IPooleable>();
+    private Dictionary<Type, Queue<IPooleable>> poolDictionary = new Dictionary<Type, Queue<IPooleable>>();
+    
+    
+
+    protected override void OnAwaken()
     {
-        Instance = this;
+
+    //    foreach (Pool pool in pools)
+    //    {
+    //        Queue<GameObject> objectPool = new Queue<GameObject>();
+
+    //        for (int i = 0; i < pool.sizeofPool; i++)
+    //        {
+    //            GameObject obj = Instantiate(pool.prefab);
+    //            obj.SetActive(false);
+    //            objectPool.Enqueue(obj);
+    //            if (pool.tag == "Bullet")
+    //            {
+    //                obj.transform.parent = magazine.transform;
+    //            }
+    //            else if (pool.tag == "Enemy")
+    //            {
+    //                obj.transform.parent = enemySpawner.transform;
+    //            }
+    //        }
+    //        poolDictionary.Add(pool.tag, objectPool);
+    //    }
+    //}
+    //public GameObject SpawnFromPool(string tag, Vector3 position, Quaternion rotation)
+    //{
+    //    if (!poolDictionary.ContainsKey(tag))
+    //    {
+    //        Debug.LogWarning("Pool with tag" + tag + " does not exist.");
+    //        return null;
+    //    }
+    //    GameObject objectToSpawn = poolDictionary[tag].Dequeue();
+
+
+    //    objectToSpawn.transform.position = position;
+    //    objectToSpawn.transform.rotation = rotation;
+    //    objectToSpawn.SetActive(true);
+    //    return objectToSpawn;
+    //}
+
+
     }
 
-    public List<Pool> pools;
-    public Dictionary<string, Queue<GameObject>> poolDictionary;
-
-    [SerializeField] GameObject magazine;
-    [SerializeField] GameObject enemySpawner;
-
-    private void Start()
+    public void InitializePool<T>(T prefab, int poolSize = 10) where T : MonoBehaviour,IPooleable
     {
-        poolDictionary = new Dictionary<string, Queue<GameObject>>();
+        if (!prefabs.ContainsKey(typeof(T)))
+            prefabs.Add(typeof(T), prefab);
+        Debug.Log(prefabs);
 
-        foreach (Pool pool in pools)
+        if (!poolDictionary.ContainsKey(typeof(T)))
+            poolDictionary.Add(typeof(T),new Queue<IPooleable>());
+        for (int i = 0; i < poolSize; i++)
         {
-            Queue<GameObject> objectPool = new Queue<GameObject>();
-
-            for (int i = 0; i < pool.sizeofPool; i++)
+            T instance = Instantiate(prefab, transform);
+            instance.gameObject.SetActive(false);
+            instance.SetParent();
+            poolDictionary[typeof(T)].Enqueue(instance);
+           
+        }
+       
+    
+     
+    }
+    public T Get<T>() where T : MonoBehaviour, IPooleable
+    {
+        bool hasKey = false;
+        foreach (var obj in poolDictionary)
+        {
+            if (obj.Key == typeof(T))
             {
-                GameObject obj = Instantiate(pool.prefab);
-                obj.SetActive(false);
-                objectPool.Enqueue(obj);
-                if (pool.tag == "Bullet")
+                if (obj.Value.Count > 0)
                 {
-                    obj.transform.parent = magazine.transform;
+                    T instance = (T)obj.Value.Dequeue();
+                    instance.ResetToDefault();
+                    return instance;
                 }
-                else if (pool.tag == "Enemy")
+                else
                 {
-                    obj.transform.parent = enemySpawner.transform;
+                    hasKey = true;
+                    break;
                 }
             }
-            poolDictionary.Add(pool.tag, objectPool);
+            
         }
-    }
-    public GameObject SpawnFromPool(string tag, Vector3 position, Quaternion rotation)
-    {
-        if (!poolDictionary.ContainsKey(tag))
+
+        foreach (var prefab in prefabs)
         {
-            Debug.LogWarning("Pool with tag" + tag + " does not exist.");
-            return null;
+            if (prefab.Key == typeof(T))
+            {
+                if (!hasKey)
+                {
+                    poolDictionary.Add(typeof(T), new Queue<IPooleable>());
+
+                }
+
+               //T objectToSpawn = (T)prefab.Value;
+               //objectToSpawn.transform.position = position;
+               //objectToSpawn.transform.rotation = rotation;
+               //objectToSpawn.gameObject.SetActive(true);
+
+                return GameObject.Instantiate((MonoBehaviour)prefab.Value,transform) as T;
+            }
+            
         }
-        GameObject objectToSpawn = poolDictionary[tag].Dequeue();
+        return null;
 
-        
-        objectToSpawn.transform.position = position;
-        objectToSpawn.transform.rotation = rotation;
-        objectToSpawn.SetActive(true);
-        return objectToSpawn;
     }
-    public void ReturnToQueue(string tag, GameObject prefab)
+
+    public void ReturnToPool<T>(T objectToPool) where T : MonoBehaviour, IPooleable
     {
-       poolDictionary[tag].Enqueue(prefab);
-        prefab.transform.position = Vector3.zero;
-        
-    }
+        if (!poolDictionary.ContainsKey(typeof(T)))
+            poolDictionary.Add(typeof(T), new Queue<IPooleable>());
 
+        objectToPool.gameObject.SetActive(false);
+        poolDictionary[typeof(T)].Enqueue(objectToPool);
+    }
+    
 }

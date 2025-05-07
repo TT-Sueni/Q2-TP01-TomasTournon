@@ -2,25 +2,20 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class Citizen : MonoBehaviour
+public class Citizen : BaseEnemy
 {
-    [SerializeField] private float speed = 1f;
+    Citizen citizen;
+    [SerializeField] GameObject citizenHolder;
 
-    [SerializeField] GameObject target;
-    [SerializeField] LayerMask bulletmask;
-    [SerializeField] GameObject citizenPrefab;
-    bool alive;
-
-    // Start is called before the first frame update
     void OnEnable()
     {
-        alive = true;
+        isAlive = true;
     }
 
-    // Update is called once per frame
+   
     void Update()
     {
-        if (alive)
+        if (isAlive)
         {
             transform.position = Vector3.MoveTowards(transform.position, target.transform.position, speed * Time.deltaTime);
             Vector3 floor = new Vector3(0, transform.position.y, 0);
@@ -29,22 +24,30 @@ public class Citizen : MonoBehaviour
 
         }
     }
-
+    public override void GetObjectFromPool()
+    {
+        //citizen = ObjectPool.Instance.Get<Citizen>();
+    }
+    public override void SetParent()
+    {
+        transform.parent = citizenHolder.transform;
+    }
+    public override void ResetToDefault()
+    {
+        
+    }
     private void OnCollisionEnter(Collision collision)
     {
-        if (CheckLayerInMask(bulletmask, collision.gameObject.layer))
+        if (Bullet.CheckLayerInMask(bulletMask, collision.gameObject.layer))
         {
 
-            ObjectPool.Instance.ReturnToQueue("Citizen", citizenPrefab);
+            ObjectPool.Instance.ReturnToPool<Citizen>(citizen);
 
-            alive = false;
-            citizenPrefab.SetActive(false);
+            isAlive = false;
+            
             Bullet.score--;
         }
 
     }
-    public static bool CheckLayerInMask(LayerMask mask, int layer)
-    {
-        return mask == (mask | (1 << layer));
-    }
+   
 }

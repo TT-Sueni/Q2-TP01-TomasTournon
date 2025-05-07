@@ -15,14 +15,17 @@ public class Shooting : MonoBehaviour
 
 
     //Reference
-    [SerializeField] public Camera Cam;
+    [SerializeField] public Camera cam;
+    [SerializeField] public GameObject FPScam;
+    [SerializeField] public GameObject thirdPersoncam;
     [SerializeField] public Transform attackPoint;
-    
+    bool FPS;
 
     void Start()
     {
-        
-        
+        if (cam == null)
+            cam = Camera.main;
+
     }
 
     // Update is called once per frame
@@ -30,6 +33,7 @@ public class Shooting : MonoBehaviour
     {
 
         Shoot();
+        CameraSwitch();
     }
     private void Shoot()
     {
@@ -37,7 +41,7 @@ public class Shooting : MonoBehaviour
         if (Input.GetMouseButtonDown(0))
         {
             //rayo en el medio de la camara
-            Ray ray = Cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0)); 
+            Ray ray = cam.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0)); 
             RaycastHit hit;
 
             //checkea si el rayo le pego a algo
@@ -56,8 +60,10 @@ public class Shooting : MonoBehaviour
 
 
             //Instantiate bullet/projectile
-            GameObject currentBullet = ObjectPool.Instance.SpawnFromPool("Bullet", attackPoint.position, Quaternion.identity);
-            
+            Bullet currentBullet =  ObjectPool.Instance.Get<Bullet>();
+            currentBullet.transform.position = attackPoint.position;
+            currentBullet.transform.rotation = Quaternion.identity;
+
 
             currentBullet.transform.forward = direction.normalized;
             
@@ -67,6 +73,22 @@ public class Shooting : MonoBehaviour
 
         }
 
+    }
+    private void CameraSwitch() // arreglar
+    {
+        if (Input.GetKeyDown(KeyCode.Alpha1) && FPS)
+        {
+            FPScam.SetActive(true);
+            thirdPersoncam.SetActive(false);
+           
+            FPS = false;
+        }
+        else if (Input.GetKeyDown(KeyCode.Alpha1) && !FPS)
+        {
+            thirdPersoncam.SetActive(true);
+            FPScam.SetActive(false);
+            FPS = true;
+        }
     }
 
 }
