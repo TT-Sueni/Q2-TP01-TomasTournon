@@ -8,11 +8,9 @@ public class Interface : MonoBehaviour
 {
 
     [Header("Panels")]
-    [SerializeField] private GameObject inGamePanel;
+    
 
-    [SerializeField] private Button menuButton;
-    [SerializeField] private Button resumeButton;
-    [SerializeField] private Button exitButton;
+    
     [SerializeField] private GameObject aim;
     [SerializeField] private Camera cam;
     bool aimON = true;
@@ -27,9 +25,7 @@ public class Interface : MonoBehaviour
     // Start is called before the first frame update
     private void Awake()
     {
-        menuButton.onClick.AddListener(OnMenuButtonClicked);
-        resumeButton.onClick.AddListener(OnResumeButtonClicked);
-        exitButton.onClick.AddListener(OnExitButtonClicked);
+        
     }
     private void Start()
     {
@@ -68,38 +64,10 @@ public class Interface : MonoBehaviour
         showScore.text = "Score : " + currentScore;
     }
 
-    private void OnMenuButtonClicked()
-    {
-        inGamePanel.SetActive(true);
-        Time.timeScale = 0;
-
-    }
-    private void OnResumeButtonClicked()
-    {
-        inGamePanel.SetActive(false);
-
-
-        Time.timeScale = 1;
-
-    }
-    private void OnExitButtonClicked()
-    {
-
-        Application.Quit();
-#if UNITY_EDITOR
-        UnityEditor.EditorApplication.isPlaying = false;
-#endif
-        Time.timeScale = 1;
-
-    }
-    private void OnDestroy()
-    {
-
-
-        menuButton.onClick.RemoveAllListeners();
-        resumeButton.onClick.RemoveAllListeners();
-        exitButton.onClick.RemoveAllListeners();
-    }
+  
+   
+ 
+   
 
    
 }

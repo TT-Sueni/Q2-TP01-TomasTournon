@@ -47,13 +47,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 37840a5356ae2ab46a8a8513e3f6d227, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  player: {fileID: 0}
   speed: 2
   target: {fileID: 0}
-  bulletmask:
+  bulletMask:
     serializedVersion: 2
     m_Bits: 512
-  enemyPrefab: {fileID: 1572211286164695698}
+  prefab: {fileID: 0}
+  enemySpawner: {fileID: 0}
 --- !u!33 &5708431221882993435
 MeshFilter:
   m_ObjectHideFlags: 0

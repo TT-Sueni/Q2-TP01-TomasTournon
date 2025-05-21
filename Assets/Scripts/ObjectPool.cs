@@ -23,48 +23,7 @@ public class ObjectPool : MonoBehaviourSingleton<ObjectPool>
     
     
 
-    protected override void OnAwaken()
-    {
-
-    //    foreach (Pool pool in pools)
-    //    {
-    //        Queue<GameObject> objectPool = new Queue<GameObject>();
-
-    //        for (int i = 0; i < pool.sizeofPool; i++)
-    //        {
-    //            GameObject obj = Instantiate(pool.prefab);
-    //            obj.SetActive(false);
-    //            objectPool.Enqueue(obj);
-    //            if (pool.tag == "Bullet")
-    //            {
-    //                obj.transform.parent = magazine.transform;
-    //            }
-    //            else if (pool.tag == "Enemy")
-    //            {
-    //                obj.transform.parent = enemySpawner.transform;
-    //            }
-    //        }
-    //        poolDictionary.Add(pool.tag, objectPool);
-    //    }
-    //}
-    //public GameObject SpawnFromPool(string tag, Vector3 position, Quaternion rotation)
-    //{
-    //    if (!poolDictionary.ContainsKey(tag))
-    //    {
-    //        Debug.LogWarning("Pool with tag" + tag + " does not exist.");
-    //        return null;
-    //    }
-    //    GameObject objectToSpawn = poolDictionary[tag].Dequeue();
-
-
-    //    objectToSpawn.transform.position = position;
-    //    objectToSpawn.transform.rotation = rotation;
-    //    objectToSpawn.SetActive(true);
-    //    return objectToSpawn;
-    //}
-
-
-    }
+   
 
     public void InitializePool<T>(T prefab, int poolSize = 10) where T : MonoBehaviour,IPooleable
     {
@@ -79,6 +38,8 @@ public class ObjectPool : MonoBehaviourSingleton<ObjectPool>
             T instance = Instantiate(prefab, transform);
             instance.gameObject.SetActive(false);
             instance.SetParent();
+           
+            
             poolDictionary[typeof(T)].Enqueue(instance);
            
         }
@@ -96,7 +57,7 @@ public class ObjectPool : MonoBehaviourSingleton<ObjectPool>
                 if (obj.Value.Count > 0)
                 {
                     T instance = (T)obj.Value.Dequeue();
-                    instance.ResetToDefault();
+                    //instance.ResetToDefault();
                     return instance;
                 }
                 else
@@ -136,7 +97,7 @@ public class ObjectPool : MonoBehaviourSingleton<ObjectPool>
         if (!poolDictionary.ContainsKey(typeof(T)))
             poolDictionary.Add(typeof(T), new Queue<IPooleable>());
 
-        objectToPool.gameObject.SetActive(false);
+        //objectToPool.gameObject.SetActive(false);
         poolDictionary[typeof(T)].Enqueue(objectToPool);
     }
     

@@ -8,6 +8,7 @@ public class Enemy : BaseEnemy
     [SerializeField] GameObject enemySpawner;
 
     Enemy enemy;
+    Bullet bullet;
 
     void OnEnable()
     {
@@ -47,11 +48,14 @@ public class Enemy : BaseEnemy
 
         if (Bullet.CheckLayerInMask(bulletMask, collision.gameObject.layer))
         {
-
             ObjectPool.Instance.ReturnToPool<Enemy>(enemy);
             Bullet.score++;
+            Debug.Log(Bullet.score);
+            
+            
+            
         }
     }
   
-
+    
 }

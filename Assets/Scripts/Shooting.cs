@@ -61,6 +61,7 @@ public class Shooting : MonoBehaviour
 
             //Instantiate bullet/projectile
             Bullet currentBullet =  ObjectPool.Instance.Get<Bullet>();
+            currentBullet.gameObject.SetActive(true);
             currentBullet.transform.position = attackPoint.position;
             currentBullet.transform.rotation = Quaternion.identity;
 

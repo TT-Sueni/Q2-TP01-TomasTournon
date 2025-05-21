@@ -9,7 +9,7 @@ public class GameManager : MonoBehaviourSingleton<GameManager>
 
     private void Start()
     {
-        ObjectPool.Instance.InitializePool(bulletPrefab,10);
+        ObjectPool.Instance.InitializePool(bulletPrefab,0);
         ObjectPool.Instance.InitializePool(enemyPrefab,10);
         ObjectPool.Instance.InitializePool(citizenPrefab, 10);
         

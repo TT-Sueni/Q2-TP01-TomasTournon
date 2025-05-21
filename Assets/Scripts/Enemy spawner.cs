@@ -34,7 +34,7 @@ public class Enemyspawner : MonoBehaviour
         if (canSpawn)
         {
             canSpawn = false;
-            var currentEnemy = ObjectPool.Instance.Get<Enemy>();
+            Enemy currentEnemy = ObjectPool.Instance.Get<Enemy>();
             
 
             currentEnemy.transform.position = spawnLocationEnemy;

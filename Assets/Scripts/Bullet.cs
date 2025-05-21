@@ -44,6 +44,7 @@ public class Bullet : MonoBehaviour, IPooleable
         if (damageable != null)
         {
             damageable.DestroyObject();
+            ReturntoPool();
         }
 
 
@@ -51,9 +52,7 @@ public class Bullet : MonoBehaviour, IPooleable
         if (CheckLayerInMask(enemyMask, collision.gameObject.layer))
         {
 
-            ObjectPool.Instance.ReturnToPool<Bullet>(bullet);
-
-
+            ReturntoPool();
 
         }
 
@@ -63,8 +62,8 @@ public class Bullet : MonoBehaviour, IPooleable
 
     public void ResetToDefault()
     {
-        rb.velocity = Vector3.zero;
-        rb.angularVelocity = Vector3.zero;
+        bullet.rb.velocity = Vector3.zero;
+        bullet.rb.angularVelocity = Vector3.zero;
     }
 
     public void SetParent()
@@ -78,6 +77,8 @@ public class Bullet : MonoBehaviour, IPooleable
 
     public void ReturntoPool()
     {
-        
+        ObjectPool.Instance.ReturnToPool<Bullet>(bullet);
+        Destroy(bullet);
+
     }
 }
